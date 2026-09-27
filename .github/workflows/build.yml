@@ -1,0 +1,39 @@
+name: Build YoloMouse
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install WiX Toolset v3
+        shell: powershell
+        run: |
+          choco install wixtoolset -y
+
+      - name: Install Visual Studio Build Tools
+        shell: powershell
+        run: |
+          choco install visualstudio2022buildtools -y --package-parameters "--includeRecommended --includeOptional --passive --wait --norestart --add Microsoft.VisualStudio.Workload.NativeDesktop --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.22621"
+
+      - name: Configure MSBuild environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+
+      - name: Build Win32 configuration
+        shell: cmd
+        run: |
+          msbuild build\YoloMouse.sln /m /p:Configuration=Release /p:Platform=Win32
+
+      - name: Build x64 configuration
+        shell: cmd
+        run: |
+          msbuild build\YoloMouse.sln /m /p:Configuration=Release /p:Platform=x64
