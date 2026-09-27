@@ -28,10 +28,10 @@ jobs:
         with:
           arch: amd64
 
-      - name: Build Win32 configuration
+      - name: Build x86 configuration
         shell: cmd
         run: |
-          msbuild build\YoloMouse.sln /m /p:Configuration=Release /p:Platform=Win32
+          msbuild build\YoloMouse.sln /m /p:Configuration=Release /p:Platform=x86
 
       - name: Build x64 configuration
         shell: cmd
